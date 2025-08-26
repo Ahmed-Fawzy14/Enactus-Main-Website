@@ -21,9 +21,10 @@
   /* Global tuning knobs */
   --amp-x: 52vw; /* horizontal travel amplitude */
   --amp-y: 38vh; /* vertical travel amplitude */
-  --blur-min: 34px;
-  --blur-max: 78px;
-  --opacity: 0.94;
+  /* Softer visual tuning (reduced glow) */
+  --blur-min: 26px; /* was 34px */
+  --blur-max: 58px; /* was 78px */
+  --opacity: 0.72; /* was 0.94 */
 }
 
 .content {
@@ -36,21 +37,22 @@
   position: absolute;
   inset: 0;
   margin: auto;
-  width: 68vmax; /* bigger for more overlap */
-  height: 68vmax;
+  width: 64vmax; /* slightly smaller for less overlap intensity */
+  height: 64vmax;
   border-radius: 50%;
   filter: blur(var(--blur-min));
   opacity: var(--opacity);
-  mix-blend-mode: plus-lighter;
+  mix-blend-mode: plus-lighter; /* keep effect but dimmed via opacity */
   will-change: transform, filter;
+  transition: opacity 0.6s ease, filter 0.6s ease;
 }
 
 /* 1–4 primary blobs */
 .blob:nth-of-type(1) {
   background: radial-gradient(
     circle at 45% 40%,
-    var(--blob1-color) 0 48%,
-    #0000 66%
+    var(--blob1-color) 0 40%,
+    #0000 60%
   );
   animation: driftA 28s ease-in-out infinite, breathe 14s ease-in-out infinite;
   animation-delay: -4s, -2s;
@@ -58,8 +60,8 @@
 .blob:nth-of-type(2) {
   background: radial-gradient(
     circle at 58% 46%,
-    var(--blob2-color) 0 50%,
-    #0000 68%
+    var(--blob2-color) 0 42%,
+    #0000 62%
   );
   animation: driftB 32s ease-in-out infinite reverse,
     breathe 16s ease-in-out infinite;
@@ -68,8 +70,8 @@
 .blob:nth-of-type(3) {
   background: radial-gradient(
     circle at 48% 58%,
-    var(--blob3-color) 0 46%,
-    #0000 64%
+    var(--blob3-color) 0 38%,
+    #0000 58%
   );
   animation: driftC 33s ease-in-out infinite,
     breathe 15s ease-in-out infinite reverse;
@@ -78,8 +80,8 @@
 .blob:nth-of-type(4) {
   background: radial-gradient(
     circle at 55% 60%,
-    var(--blob4-color) 0 42%,
-    #0000 60%
+    var(--blob4-color) 0 36%,
+    #0000 56%
   );
   animation: driftD 26s ease-in-out infinite reverse,
     breathe 17s ease-in-out infinite;
@@ -88,56 +90,56 @@
 
 /* 5–6 micro-blobs for extra “flow” */
 .blob:nth-of-type(5) {
-  width: 38vmax;
-  height: 38vmax;
+  width: 34vmax;
+  height: 34vmax;
   background: radial-gradient(
     circle at 52% 50%,
-    var(--blob5-color) 0 48%,
-    #0000 66%
+    var(--blob5-color) 0 40%,
+    #0000 60%
   );
   animation: driftE 21s ease-in-out infinite, breathe 12s ease-in-out infinite;
   animation-delay: -6s, -1s;
-  opacity: 0.85;
+  opacity: 0.7;
 }
 .blob:nth-of-type(6) {
-  width: 42vmax;
-  height: 42vmax;
+  width: 38vmax;
+  height: 38vmax;
   background: radial-gradient(
     circle at 50% 52%,
-    var(--blob6-color) 0 45%,
-    #0000 64%
+    var(--blob6-color) 0 38%,
+    #0000 58%
   );
   animation: driftF 23s ease-in-out infinite reverse,
     breathe 13s ease-in-out infinite;
   animation-delay: -9s, -4s;
-  opacity: 0.88;
+  opacity: 0.68;
 }
 
 /* 7–8 new blobs */
 .blob:nth-of-type(7) {
-  width: 46vmax;
-  height: 46vmax;
+  width: 42vmax;
+  height: 42vmax;
   background: radial-gradient(
     circle at 48% 52%,
-    var(--blob7-color) 0 46%,
-    #0000 66%
+    var(--blob7-color) 0 40%,
+    #0000 60%
   );
   animation: driftG 27s ease-in-out infinite, breathe 14s ease-in-out infinite;
   animation-delay: -5s, -2s;
-  opacity: 0.9;
+  opacity: 0.65;
 }
 .blob:nth-of-type(8) {
-  width: 52vmax;
-  height: 52vmax;
+  width: 48vmax;
+  height: 48vmax;
   background: radial-gradient(
     circle at 50% 48%,
-    var(--blob8-color) 0 44%,
-    #0000 64%
+    var(--blob8-color) 0 38%,
+    #0000 58%
   );
   animation: driftH 31s ease-in-out infinite reverse,
     breathe 15s ease-in-out infinite;
   animation-delay: -8s, -3s;
-  opacity: 0.87;
+  opacity: 0.62;
 }
 
 /* --- Motion paths (unchanged for A–F, added G–H) --- */

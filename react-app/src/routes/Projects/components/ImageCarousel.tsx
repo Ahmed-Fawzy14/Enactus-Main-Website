@@ -39,10 +39,54 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   const trackRef = useRef<HTMLDivElement | null>(null);
   const skipTransitionRef = useRef(false);
   const count = projectImages.length;
-  // Width percentage each slide occupies (must match CSS flex-basis of 72%)
-  const slidePercent = 72;
-  // Side padding percentage (space left/right to create peek of adjacent slides = (100 - slidePercent)/2)
-  const sidePadPercent = (100 - slidePercent) / 2; // 14 when slidePercent=72
+  // Dynamically derive slide percent from computed flex-basis so CSS breakpoints (different flex-basis values) stay in sync
+  const [slidePercent, setSlidePercent] = useState(72);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const recalcSlidePercent = useCallback(() => {
+    try {
+      const container = containerRef.current;
+      const track = trackRef.current;
+      if (!container || !track) return;
+      const firstSlide = track.querySelector(
+        `.${styles.imageSlide}`
+      ) as HTMLElement | null;
+      if (!firstSlide) return;
+      const basis = window.getComputedStyle(firstSlide).flexBasis;
+      let pct = 72;
+      if (basis.endsWith("%")) {
+        const parsed = parseFloat(basis);
+        if (!Number.isNaN(parsed) && parsed > 10 && parsed < 100) pct = parsed;
+      } else {
+        // fallback compute via element width vs container width
+        const slideRect = firstSlide.getBoundingClientRect();
+        const contRect = container.getBoundingClientRect();
+        if (contRect.width > 0) {
+          const computed = (slideRect.width / contRect.width) * 100;
+          if (computed > 10 && computed < 100)
+            pct = parseFloat(computed.toFixed(2));
+        }
+      }
+      setSlidePercent(pct);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    recalcSlidePercent();
+    const handle = () => recalcSlidePercent();
+    window.addEventListener("resize", handle);
+    // Recalculate after fonts/images load (layout shifts)
+    const id = window.setTimeout(recalcSlidePercent, 300);
+    return () => {
+      window.removeEventListener("resize", handle);
+      window.clearTimeout(id);
+    };
+  }, [recalcSlidePercent]);
+
+  // Side padding percentage (space left/right to create peek of adjacent slides)
+  const sidePadPercent = (100 - slidePercent) / 2;
 
   // Extended list for seamless loop
   const extended = [
@@ -89,6 +133,28 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     };
   }, [rawIndex, autoSeconds, pauseOnHover, next, focused]);
 
+  // Pause when tab hidden, resume when visible
+  useEffect(() => {
+    const handleVis = () => {
+      if (document.hidden) {
+        if (timerRef.current) {
+          window.clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
+      } else {
+        if (!hovering.current && focused === null && autoSeconds > 0) {
+          if (timerRef.current) window.clearTimeout(timerRef.current);
+          timerRef.current = window.setTimeout(
+            () => next(),
+            autoSeconds * 1000
+          );
+        }
+      }
+    };
+    document.addEventListener("visibilitychange", handleVis);
+    return () => document.removeEventListener("visibilitychange", handleVis);
+  }, [autoSeconds, next, focused]);
+
   const onMouseEnter = () => {
     hovering.current = true;
     if (pauseOnHover && timerRef.current) {
@@ -98,7 +164,11 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   };
   const onMouseLeave = () => {
     hovering.current = false;
-    setRawIndex((r) => r);
+    // Explicitly restart autoplay since rawIndex may not change (no state update -> effect won't rerun)
+    if (pauseOnHover && autoSeconds > 0 && focused === null) {
+      if (timerRef.current) window.clearTimeout(timerRef.current);
+      timerRef.current = window.setTimeout(() => next(), autoSeconds * 1000);
+    }
   };
 
   // Seamless loop handling
@@ -149,54 +219,59 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   return (
     <div
       className={styles.imageCarousel}
+      ref={containerRef}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       aria-roledescription="image carousel"
     >
-      <div
-        className={styles.imageTrack}
-        ref={trackRef}
-        style={{
-          // Keep central slide centered with consistent peeks by using (rawIndex-1) because index 1 is first real slide.
-          transform: `translateX(calc(${sidePadPercent}% - ${
-            (rawIndex - 1) * slidePercent
-          }%))`,
-        }}
-      >
-        {extended.map((project, i) => {
-          const logical =
-            i === 0 ? count - 1 : i === extended.length - 1 ? 0 : i - 1;
-          const isClone = i === 0 || i === extended.length - 1;
+      <div className={styles.imageViewport}>
+        <div
+          className={styles.imageTrack}
+          ref={trackRef}
+          style={{
+            transform: `translateX(calc(${sidePadPercent}% - ${
+              (rawIndex - 1) * slidePercent
+            }%))`,
+          }}
+        >
+          {extended.map((project, i) => {
+            const logical =
+              i === 0 ? count - 1 : i === extended.length - 1 ? 0 : i - 1;
+            const isClone = i === 0 || i === extended.length - 1;
 
-          return (
-            <div key={`slide-${i}-${project.id}`} className={styles.imageSlide}>
+            return (
               <div
-                className={styles.imageCard}
-                role="button"
-                tabIndex={0}
-                onClick={() => {
-                  if (!isClone) setFocused(logical);
-                }}
-                onKeyDown={(e) => {
-                  if (isClone) return;
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setFocused(logical);
-                  }
-                }}
-                style={isClone ? { pointerEvents: "none" } : undefined}
+                key={`slide-${i}-${project.id}`}
+                className={styles.imageSlide}
               >
-                {project.image ? (
-                  <img src={project.image} alt={project.title} />
-                ) : project.video ? (
-                  <video src={project.video} controls />
-                ) : (
-                  <div className={styles.placeholder}>{project.id}</div>
-                )}
+                <div
+                  className={styles.imageCard}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => {
+                    if (!isClone) setFocused(logical);
+                  }}
+                  onKeyDown={(e) => {
+                    if (isClone) return;
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setFocused(logical);
+                    }
+                  }}
+                  style={isClone ? { pointerEvents: "none" } : undefined}
+                >
+                  {project.image ? (
+                    <img src={project.image} alt={project.title} />
+                  ) : project.video ? (
+                    <video src={project.video} controls />
+                  ) : (
+                    <div className={styles.placeholder}>{project.id}</div>
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       <button

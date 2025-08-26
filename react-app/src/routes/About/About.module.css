@@ -1,15 +1,71 @@
-/* ABOUT PAGE STYLES */
+/* ABOUT PAGE STYLES - Softer colors */
 .aboutSection {
-  background: #000;
-  color: #d9d9d9;
+  background: #000000;
+  color: #e5e5e5;
   min-height: 100vh;
   width: 100vw;
-  padding: 3rem 1rem 4rem; /* moved up */
+  padding: clamp(2.5rem, 4vw, 3rem) clamp(1rem, 2vw, 1rem) 4rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 3rem;
+  gap: clamp(2.5rem, 4vw, 3rem);
+}
+/* Social links row */
+.socials {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem 0.2rem;
+  border-radius: 18px;
+  backdrop-filter: blur(10px) saturate(160%);
+  -webkit-backdrop-filter: blur(10px) saturate(160%);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.015)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 6px 24px -10px rgba(0, 0, 0, 0.6);
+}
+
+.socialLink {
+  color: #e7e3d9;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  position: relative;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.015)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: color 0.35s, border-color 0.4s, background 0.4s, transform 0.35s;
+  text-decoration: none;
+}
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: #f6c21d;
+  border-color: rgba(246, 194, 29, 0.55);
+  background: linear-gradient(
+    145deg,
+    rgba(246, 194, 29, 0.22),
+    rgba(246, 194, 29, 0.06)
+  );
+  text-shadow: 0 0 12px rgba(246, 194, 29, 0.55);
+  transform: translateY(-3px);
+}
+.socialLink:active {
+  transform: translateY(0);
+  filter: brightness(0.92);
+}
+.socialLink svg {
+  pointer-events: none;
 }
 
 .title {
@@ -17,17 +73,20 @@
   font-weight: 700;
   letter-spacing: 1px;
   margin: 0;
-  background: linear-gradient(90deg, #f6c21d, #d7a614 55%, #f2d77a);
+  background: linear-gradient(90deg, #e6b84d, #d1a033 55%, #f0d98a);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
+  text-align: center;
+  padding: 0 1rem;
 }
 
 .introText {
   max-width: 760px;
   text-align: center;
-  line-height: 1.45;
-  font-size: 1.05rem;
+  line-height: 1.5;
+  font-size: clamp(1rem, 2.2vw, 1.08rem);
+  padding: 0 1rem;
 }
 
 /* Carousel */
@@ -47,7 +106,7 @@
   top: 0;
   bottom: 0;
   width: 60px;
-  z-index: 10;
+  z-index: 1; /* lower so cards remain clickable */
   pointer-events: none;
 }
 .carousel::before {
@@ -87,7 +146,8 @@
   isolation: isolate;
   cursor: pointer;
   transition: transform 0.5s cubic-bezier(0.55, 0.1, 0.25, 1), box-shadow 0.5s;
-  min-height: 600px;
+  /* Use clamp so tall tablets (iPad Pro) and small phones scale better */
+  min-height: clamp(520px, 76vh, 600px);
 }
 .profileCard:focus {
   outline: 2px solid #f6c21d;
@@ -98,7 +158,8 @@
 }
 .profileVisual {
   width: 100%;
-  height: 360px;
+  /* Fluid visual height for varied device heights */
+  height: clamp(280px, 42vh, 360px);
   border-radius: 22px;
   background: #1d1d1d;
   display: flex;
@@ -236,6 +297,12 @@
 .activeDot {
   background: linear-gradient(135deg, #f6c21d, #d7a614);
   transform: scale(1.4);
+}
+/* Tablet (including iPad / iPad Pro widths just below desktop) adjust slide width for better side peek */
+@media (max-width: 1100px) {
+  .slide {
+    flex: 0 0 62%;
+  }
 }
 @media (max-width: 940px) {
   .profileCard {
@@ -392,5 +459,98 @@
 .focusedCard {
   transform: translateY(-10px) scale(1.02);
   box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.7),
-    0 4px 12px -2px rgba(0, 0, 0, 0.6);
+    0 6px 20px -6px rgba(0, 0, 0, 0.8);
+  border-color: #e6b84d;
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 768px) {
+  .aboutSection {
+    padding: 2rem 0.75rem 3.5rem;
+    gap: 2rem;
+  }
+  .carousel {
+    width: min(640px, 96vw);
+  }
+  .slide {
+    flex: 0 0 82%; /* slightly narrower for more natural peek */
+    padding: 0.75rem clamp(0.5rem, 1.5vw, 1rem);
+  }
+  .profileCard {
+    padding: 1.5rem 1.2rem;
+    min-height: 520px;
+    border-radius: 22px;
+  }
+  .profileVisual {
+    height: 280px;
+    border-radius: 18px;
+  }
+  .navBtn {
+    width: 2.8rem;
+    height: 2.8rem;
+    font-size: 1.7rem;
+  }
+  .prevBtn {
+    left: 0.5rem;
+  }
+  .nextBtn {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutSection {
+    padding: 1.5rem 0.5rem 3rem;
+    gap: 1.5rem;
+  }
+  .carousel {
+    width: min(560px, 98vw);
+  }
+  .slide {
+    flex: 0 0 92%;
+    padding: 0.5rem 0.25rem;
+  }
+  .profileCard {
+    padding: 1.2rem 1rem;
+    min-height: 460px;
+    border-radius: 20px;
+  }
+  .profileVisual {
+    height: 240px;
+    border-radius: 16px;
+  }
+  .profileText h3 {
+    font-size: clamp(1.6rem, 5vw, 2rem);
+  }
+  .profileText h4 {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+  }
+  .profileText p {
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  }
+  .navBtn {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
+  }
+  .carousel::before,
+  .carousel::after {
+    width: 40px;
+  }
+}
+/* Ultra small phones */
+@media (max-width: 400px) {
+  .slide {
+    flex: 0 0 96%;
+  }
+  .profileCard {
+    min-height: 430px;
+    padding: 1rem 0.85rem;
+  }
+  .profileVisual {
+    height: 200px;
+  }
+  .profileText p {
+    font-size: clamp(0.8rem, 3.2vw, 0.9rem);
+  }
 }

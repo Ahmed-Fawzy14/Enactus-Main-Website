@@ -1,11 +1,214 @@
-/* Transparent navbar with raised stacking so underlying content doesn't block clicks */
-.transparentNavBar {
-  background: transparent !important; /* ensure no bootstrap bg color */
-  position: relative; /* create stacking context */
-  z-index: 50; /* above main hero content */
-  box-shadow: none;
+/* Modern Black & Gold Navbar */
+.navRoot {
+  --gold: #d6a320;
+  --gold-soft: #f2d07a;
+  background: linear-gradient(145deg, #050505cc, #111111e6 55%, #181818f2);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  border-bottom: 1px solid #1f1f1f;
+  position: absolute; /* stay at top of home page only */
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 72px; /* explicit height for offset calculations */
+  z-index: 400; /* above other layers */
+  box-shadow: 0 4px 18px -6px rgba(0, 0, 0, 0.6), 0 1px 2px 0 #000;
+  isolation: isolate;
 }
 
+/* Subtle top edge glow */
+.navRoot::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+      circle at 60% 0%,
+      rgba(214, 163, 32, 0.15),
+      transparent 60%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(214, 163, 32, 0.25),
+      transparent 35%,
+      transparent 65%,
+      rgba(214, 163, 32, 0.25)
+    );
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0.55;
+}
+
+/* Brand tweaks */
+.navRoot :global(.navbar-brand) {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 600;
+  font-size: 1.02rem;
+  letter-spacing: 0.5px;
+  color: var(--gold) !important;
+  position: relative;
+  text-shadow: 0 0 12px rgba(214, 163, 32, 0.2);
+}
+
+.navRoot :global(.navbar-brand:hover) {
+  filter: brightness(1.08) saturate(110%);
+}
+
+/* Nav links */
+.navLinks {
+  --link-color: #e7e3d9;
+  --link-hover: var(--gold);
+  --link-active: var(--gold-soft);
+  font-weight: 500;
+}
+
+.navLinks :global(.nav-link) {
+  position: relative;
+  color: var(--link-color) !important;
+  padding: 0.65rem 0.95rem;
+  margin: 0 0.25rem;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  font-size: 0.92rem;
+  letter-spacing: 0.5px;
+}
+
+.navLinks :global(.nav-link)::after {
+  content: "";
+  position: absolute;
+  left: 14%;
+  bottom: 6px;
+  width: 72%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: center;
+  transition: opacity 0.4s ease,
+    transform 0.45s cubic-bezier(0.65, 0.05, 0.36, 1);
+  border-radius: 2px;
+}
+
+.navLinks :global(.nav-link:hover),
+.navLinks :global(.nav-link:focus) {
+  color: var(--link-hover) !important;
+  text-shadow: 0 0 8px rgba(214, 163, 32, 0.3);
+}
+
+.navLinks :global(.nav-link:hover)::after,
+.navLinks :global(.nav-link:focus)::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.navLinks :global(.nav-link.active),
+.navLinks :global(.nav-link.show) {
+  color: var(--link-active) !important;
+}
+
+.navLinks :global(.nav-link.active)::after,
+.navLinks :global(.nav-link.show)::after {
+  opacity: 1;
+  transform: scaleX(1);
+  background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+}
+
+/* Social links */
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-left: auto; /* push to far right */
+  padding-left: 0.75rem;
+}
+
+.socialLink {
+  color: #e7e3d9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  position: relative;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.04),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  transition: color 0.35s, border-color 0.4s, background 0.4s, transform 0.3s;
+}
+
+.socialLink:hover,
+.socialLink:focus-visible {
+  color: var(--gold);
+  border-color: rgba(214, 163, 32, 0.55);
+  background: linear-gradient(
+    145deg,
+    rgba(214, 163, 32, 0.18),
+    rgba(214, 163, 32, 0.05)
+  );
+  text-shadow: 0 0 10px rgba(214, 163, 32, 0.5);
+  transform: translateY(-2px);
+}
+
+.socialLink:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+
+.socialLink svg {
+  pointer-events: none;
+}
+
+@media (max-width: 991px) {
+  .socials {
+    padding-top: 0.65rem;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+  .socialLink {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* Toggler */
+.navRoot :global(.navbar-toggler) {
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 0.4rem 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.35s, border-color 0.35s;
+}
+
+.navRoot :global(.navbar-toggler:focus) {
+  box-shadow: 0 0 0 2px rgba(214, 163, 32, 0.4);
+}
+
+.navRoot :global(.navbar-toggler:hover) {
+  background: rgba(214, 163, 32, 0.12);
+  border-color: rgba(214, 163, 32, 0.5);
+}
+
+/* Smooth scroll retained */
 html {
   scroll-behavior: smooth;
+}
+
+@media (max-width: 991px) {
+  .navLinks :global(.nav-link) {
+    padding: 0.8rem 0.3rem;
+    margin: 0.15rem 0.25rem;
+  }
+  .navLinks :global(.nav-link)::after {
+    bottom: 4px;
+  }
+  .navRoot {
+    background: linear-gradient(145deg, #070707f2, #121212fa 55%, #181818fa);
+  }
 }

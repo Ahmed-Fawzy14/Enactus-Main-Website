@@ -82,7 +82,47 @@ const BoardCarousel: React.FC<CarouselProps> = ({
   const trackRef = useRef<HTMLDivElement | null>(null);
   const skipTransitionRef = useRef(false);
   const count = members.length;
-  const slidePercent = 70; // width percentage each slide occupies to allow peeking neighbors
+  // Dynamic slide width percent (matches CSS flex-basis of .slide which changes at breakpoints)
+  const [slidePercent, setSlidePercent] = useState(70);
+
+  const recalcSlidePercent = useCallback(() => {
+    try {
+      const track = trackRef.current;
+      if (!track) return;
+      const first = track.querySelector(
+        `.${styles.slide}`
+      ) as HTMLElement | null;
+      if (!first) return;
+      const basis = window.getComputedStyle(first).flexBasis;
+      let pct = 70;
+      if (basis.endsWith("%")) {
+        const parsed = parseFloat(basis);
+        if (!Number.isNaN(parsed) && parsed > 10 && parsed < 100) pct = parsed;
+      } else {
+        const rect = first.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        if (trackRect.width > 0) {
+          const computed = (rect.width / trackRect.width) * 100;
+          if (computed > 10 && computed < 100)
+            pct = parseFloat(computed.toFixed(2));
+        }
+      }
+      setSlidePercent(pct);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    recalcSlidePercent();
+    const handle = () => recalcSlidePercent();
+    window.addEventListener("resize", handle);
+    const id = window.setTimeout(recalcSlidePercent, 250);
+    return () => {
+      window.removeEventListener("resize", handle);
+      window.clearTimeout(id);
+    };
+  }, [recalcSlidePercent]);
 
   // Extended list for seamless loop
   const extended = [members[count - 1], ...members, members[0]];
@@ -196,7 +236,10 @@ const BoardCarousel: React.FC<CarouselProps> = ({
         className={styles.slidesTrack}
         ref={trackRef}
         style={{
-          transform: `translateX(calc(15% - ${rawIndex * slidePercent}%))`,
+          // sidePad = (100 - slidePercent)/2 positions current (rawIndex-1) slide centrally
+          transform: `translateX(calc(${(100 - slidePercent) / 2}% - ${
+            (rawIndex - 1) * slidePercent
+          }%))`,
         }}
       >
         {extended.map((m, i) => {

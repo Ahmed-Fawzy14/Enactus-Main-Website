@@ -5,7 +5,12 @@
   font-family: "Alfa Slab One", serif;
   font-weight: 400;
   font-style: normal;
-  font-size: 6rem;
+  /* Fluid clamp: min 2.6rem, scale with viewport, cap at 6rem */
+  font-size: clamp(2.6rem, 8vw, 6rem);
+  line-height: 1.05;
+  margin: 0 0 1rem;
+  padding: 0 0.5rem;
+  word-break: break-word;
 }
 
 .centerContainer {
@@ -15,7 +20,7 @@
   align-items: center; /* Centers content vertically */
   height: 100vh; /* Sets height to 100% of the viewport height */
   margin: 0; /* Removes default margin */
-  transform: translateY(-10%); /* moves everything up a bit */
+  transform: translateY(2%); /* moves everything up a bit */
 }
 
 .divFitter {
@@ -30,10 +35,35 @@
 }
 
 .mainDiv {
-  width: 800px;
+  width: min(800px, 92vw);
 }
 
 .subText {
   text-align: center;
-  width: 600px; /* match wrapper width*/
+  width: min(640px, 90vw);
+  font-size: clamp(0.9rem, 2.6vw, 1.15rem);
+  line-height: 1.55;
+  margin: 0 auto 1.2rem;
+  padding: 0 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .centerContainer {
+    transform: translateY(-4%);
+  }
+  .mainText {
+    font-size: clamp(2.4rem, 10vw, 3.4rem);
+  }
+  .subText {
+    font-size: clamp(0.92rem, 3.8vw, 1.05rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .mainText {
+    font-size: clamp(2rem, 11vw, 2.8rem);
+  }
+  .subText {
+    font-size: clamp(0.9rem, 4.2vw, 1rem);
+  }
 }
