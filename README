@@ -1,0 +1,56 @@
+Steps in this project:
+
+1. Setting up the project
+
+1.1 Create React App using Vite: npm create vite@latest
+
+2. What files do
+
+node_modules: where all third party apps are installed
+
+public: where public assests are like images and videos
+
+src: where the frontend source code is
+
+index.html:
+
+/src/main.tsx: is the entry point to our application
+
+package.json: where informaiton about the project is
+
+3. Creating a component
+
+3.1 Create a new file in the src directory
+
+3.2 We will use function based components but you could also use classes
+3.2.1 For react components we use PascalCasing
+3.2.2 Create a function for the ComponentName component
+3.2.3 Return what the component should show on the UI when it is used
+3.2.4 export default ComponentName (A component can only return one element -> wrap with div to return more than on element)
+    Use wrap with abrv to wrap a group of elements 
+3.2.4.1 Better use import { Fragment } from 'react' 
+4.2.4.1.1 The best is to just wrap in <> </> which tells react to put a fragment without using import
+3.2.5 Use component in App.jsx (or where ever you need it)
+
+3.3 How to use a component in another file
+3.3.1 import ComponentName from 'file path'
+3.3.2 Use component name as a HTML component ex. <Message /> or <Message></Message>
+
+4. How to use Js in the htlm code
+4.1 Using {} inside it you can write any Js expression (something which returns a value)
+
+5. How react works
+
+5.1 index.html run first calling main.tsx
+5.2 main.tsx refrences <App/> component using ReactDOM (for web) if this were for mobile it would be react native
+
+6. Install bootstrap (Makes CSS better)
+6.1 npm i bootstrap@latest
+6.2 import bootstrap into main.tsx: import "bootstrap/dist/css/bootstrap.css";
+
+
+7. Javascript tricks
+7.1 true && anything will output anything SO for simple conditional rendering you can use condition && <what you want to show>
+
+8. How to apply CSS to a HTML block
+8.1 By using className = "The class which has this attribute in this file's CSS or bootstrap.css"

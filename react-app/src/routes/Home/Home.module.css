@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Oswald:wght@200..700&display=swap");
+
+.mainText {
+  text-align: center;
+  font-family: "Alfa Slab One", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 6rem;
+}
+
+.centerContainer {
+  display: flex; /* Enables Flexbox layout */
+  flex-direction: column; /* stack children vertically */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+  height: 100vh; /* Sets height to 100% of the viewport height */
+  margin: 0; /* Removes default margin */
+}
+
+.divFitter {
+  width: fit-content;
+  height: fit-content;
+}
+
+.divCenter {
+  display: flex; /* Enables Flexbox layout */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center;
+}
+
+.mainDiv {
+  width: 800px;
+}
+
+.subText {
+  text-align: center;
+  width: 600px; /* match wrapper width*/
+}

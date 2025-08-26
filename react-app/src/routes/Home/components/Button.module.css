@@ -1,0 +1,17 @@
+.buttonWrapper {
+  width: 150px; /* fixed width */
+  height: 55px; /* fixed height */
+  color: white;
+  background-color: black;
+  margin-top: 16px;
+  margin-right: 16px;
+  padding: 12px 24px; /* bigger click area */
+  font-size: 1.25rem; /* larger text inside button */
+  border-radius: 8px;
+}
+.mainText {
+  text-align: center;
+  font-family: "Alfa Slab One", serif;
+  font-weight: 400;
+  font-style: normal;
+}
