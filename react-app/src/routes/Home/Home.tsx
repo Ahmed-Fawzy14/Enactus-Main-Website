@@ -26,7 +26,7 @@ function Home() {
                 <ApplyButton link="https://docs.google.com/forms/d/e/1FAIpQLScZyGNf8X-k_MbtIUfrw3HWH_d91js9IJ6xUwaTTWgd44rFbg/viewform?fbclid=PAdGRleAMac9JleHRuA2FlbQIxMQABpycw_iKBwwLFQNKG3KWwAQzs2A_pkS6Xv-fu1fezoEd3yMvVFkfrUSXDPKRI_aem_eOP3iMNaehGowmiC7LUb3Q">
                   Apply
                 </ApplyButton>
-                <HomeButton link="https://www.google.com">About Us</HomeButton>
+                <HomeButton link="#about">About Us</HomeButton>
               </div>
             </div>
           </div>
