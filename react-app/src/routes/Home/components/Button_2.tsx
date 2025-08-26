@@ -5,11 +5,11 @@ interface homeButtonText {
   link: string;
 }
 
-function HomeButton({ children, link }: homeButtonText) {
+function ApplyButton({ children, link }: homeButtonText) {
   return (
     <>
       <button
-        className={`${styles.buttonWrapper} ${styles.mainText}`}
+        className={`${styles.buttonWrapperTransparent} ${styles.mainText}`}
         onClick={() => {
           window.open(link, "_blank");
           console.log("Clicked");
@@ -21,4 +21,4 @@ function HomeButton({ children, link }: homeButtonText) {
   );
 }
 
-export default HomeButton;
+export default ApplyButton;

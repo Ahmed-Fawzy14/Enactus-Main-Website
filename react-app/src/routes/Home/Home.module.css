@@ -15,6 +15,7 @@
   align-items: center; /* Centers content vertically */
   height: 100vh; /* Sets height to 100% of the viewport height */
   margin: 0; /* Removes default margin */
+  transform: translateY(-10%); /* moves everything up a bit */
 }
 
 .divFitter {

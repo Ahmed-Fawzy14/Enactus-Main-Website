@@ -1,25 +1,394 @@
 .animatedGradientBackground {
+  position: relative;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(270deg, #f7b900, #deae1f, #f7df94, #ffffff);
-  background-size: 600% 600%;
-  animation: GradientAnimation 20s linear infinite;
+  overflow: clip;
+  background: var(--bg-color);
+  isolation: isolate;
+
+  /* 🎨 Color palette vars */
+  --bg-color: #dac07b; /* base background */
+
+  --blob1-color: #f6c21d; /* deep gold */
+  --blob2-color: #e0b22a; /* warm honey */
+  --blob3-color: #f2d77a; /* pale gold */
+  --blob4-color: #efd487; /* creamy gold */
+  --blob5-color: #d7a614; /* dark gold micro */
+  --blob6-color: #f0c652; /* bright gold micro */
+  --blob7-color: #cfae4e; /* muted golden tan */
+  --blob8-color: #f5dd9b; /* light buttery cream */
+
+  /* Global tuning knobs */
+  --amp-x: 52vw; /* horizontal travel amplitude */
+  --amp-y: 38vh; /* vertical travel amplitude */
+  --blur-min: 34px;
+  --blur-max: 78px;
+  --opacity: 0.94;
 }
 
-@keyframes GradientAnimation {
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- LAVA BLOBS --- */
+.blob {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 68vmax; /* bigger for more overlap */
+  height: 68vmax;
+  border-radius: 50%;
+  filter: blur(var(--blur-min));
+  opacity: var(--opacity);
+  mix-blend-mode: plus-lighter;
+  will-change: transform, filter;
+}
+
+/* 1–4 primary blobs */
+.blob:nth-of-type(1) {
+  background: radial-gradient(
+    circle at 45% 40%,
+    var(--blob1-color) 0 48%,
+    #0000 66%
+  );
+  animation: driftA 28s ease-in-out infinite, breathe 14s ease-in-out infinite;
+  animation-delay: -4s, -2s;
+}
+.blob:nth-of-type(2) {
+  background: radial-gradient(
+    circle at 58% 46%,
+    var(--blob2-color) 0 50%,
+    #0000 68%
+  );
+  animation: driftB 32s ease-in-out infinite reverse,
+    breathe 16s ease-in-out infinite;
+  animation-delay: -7s, -1s;
+}
+.blob:nth-of-type(3) {
+  background: radial-gradient(
+    circle at 48% 58%,
+    var(--blob3-color) 0 46%,
+    #0000 64%
+  );
+  animation: driftC 33s ease-in-out infinite,
+    breathe 15s ease-in-out infinite reverse;
+  animation-delay: -11s, -3s;
+}
+.blob:nth-of-type(4) {
+  background: radial-gradient(
+    circle at 55% 60%,
+    var(--blob4-color) 0 42%,
+    #0000 60%
+  );
+  animation: driftD 26s ease-in-out infinite reverse,
+    breathe 17s ease-in-out infinite;
+  animation-delay: -3s, -5s;
+}
+
+/* 5–6 micro-blobs for extra “flow” */
+.blob:nth-of-type(5) {
+  width: 38vmax;
+  height: 38vmax;
+  background: radial-gradient(
+    circle at 52% 50%,
+    var(--blob5-color) 0 48%,
+    #0000 66%
+  );
+  animation: driftE 21s ease-in-out infinite, breathe 12s ease-in-out infinite;
+  animation-delay: -6s, -1s;
+  opacity: 0.85;
+}
+.blob:nth-of-type(6) {
+  width: 42vmax;
+  height: 42vmax;
+  background: radial-gradient(
+    circle at 50% 52%,
+    var(--blob6-color) 0 45%,
+    #0000 64%
+  );
+  animation: driftF 23s ease-in-out infinite reverse,
+    breathe 13s ease-in-out infinite;
+  animation-delay: -9s, -4s;
+  opacity: 0.88;
+}
+
+/* 7–8 new blobs */
+.blob:nth-of-type(7) {
+  width: 46vmax;
+  height: 46vmax;
+  background: radial-gradient(
+    circle at 48% 52%,
+    var(--blob7-color) 0 46%,
+    #0000 66%
+  );
+  animation: driftG 27s ease-in-out infinite, breathe 14s ease-in-out infinite;
+  animation-delay: -5s, -2s;
+  opacity: 0.9;
+}
+.blob:nth-of-type(8) {
+  width: 52vmax;
+  height: 52vmax;
+  background: radial-gradient(
+    circle at 50% 48%,
+    var(--blob8-color) 0 44%,
+    #0000 64%
+  );
+  animation: driftH 31s ease-in-out infinite reverse,
+    breathe 15s ease-in-out infinite;
+  animation-delay: -8s, -3s;
+  opacity: 0.87;
+}
+
+/* --- Motion paths (unchanged for A–F, added G–H) --- */
+@keyframes driftA {
   0% {
-    background-position: 0% 50%;
+    transform: translate(calc(-0.65 * var(--amp-x)), calc(-0.4 * var(--amp-y)))
+      scale(1.08) rotate(0);
   }
-  25% {
-    background-position: 50% 100%;
+  18% {
+    transform: translate(calc(0.35 * var(--amp-x)), calc(-1.05 * var(--amp-y)))
+      scale(0.94) rotate(70deg);
   }
-  50% {
-    background-position: 100% 50%;
+  42% {
+    transform: translate(calc(1.05 * var(--amp-x)), calc(0.15 * var(--amp-y)))
+      scale(1.14) rotate(150deg);
   }
-  75% {
-    background-position: 50% 0%;
+  66% {
+    transform: translate(calc(-0.2 * var(--amp-x)), calc(1.05 * var(--amp-y)))
+      scale(0.96) rotate(235deg);
+  }
+  84% {
+    transform: translate(calc(-0.95 * var(--amp-x)), calc(0.25 * var(--amp-y)))
+      scale(1.1) rotate(310deg);
   }
   100% {
-    background-position: 0% 50%;
+    transform: translate(calc(-0.65 * var(--amp-x)), calc(-0.4 * var(--amp-y)))
+      scale(1.08) rotate(360deg);
+  }
+}
+@keyframes driftB {
+  0% {
+    transform: translate(calc(0.85 * var(--amp-x)), calc(-0.3 * var(--amp-y)))
+      scale(0.95) rotate(0);
+  }
+  20% {
+    transform: translate(calc(-0.4 * var(--amp-x)), calc(1 * var(--amp-y)))
+      scale(1.1) rotate(85deg);
+  }
+  44% {
+    transform: translate(calc(-1.05 * var(--amp-x)), calc(0.05 * var(--amp-y)))
+      scale(1.02) rotate(160deg);
+  }
+  68% {
+    transform: translate(calc(0.1 * var(--amp-x)), calc(-1.05 * var(--amp-y)))
+      scale(0.92) rotate(240deg);
+  }
+  88% {
+    transform: translate(calc(0.95 * var(--amp-x)), calc(0.1 * var(--amp-y)))
+      scale(1.12) rotate(320deg);
+  }
+  100% {
+    transform: translate(calc(0.85 * var(--amp-x)), calc(-0.3 * var(--amp-y)))
+      scale(0.95) rotate(360deg);
+  }
+}
+@keyframes driftC {
+  0% {
+    transform: translate(calc(-0.45 * var(--amp-x)), calc(0.75 * var(--amp-y)))
+      scale(1.12) rotate(0);
+  }
+  22% {
+    transform: translate(calc(0.95 * var(--amp-x)), calc(0.05 * var(--amp-y)))
+      scale(1) rotate(60deg);
+  }
+  46% {
+    transform: translate(calc(0.25 * var(--amp-x)), calc(-1 * var(--amp-y)))
+      scale(0.9) rotate(135deg);
+  }
+  64% {
+    transform: translate(calc(-0.95 * var(--amp-x)), calc(-0.08 * var(--amp-y)))
+      scale(1.05) rotate(210deg);
+  }
+  86% {
+    transform: translate(calc(-0.1 * var(--amp-x)), calc(1.1 * var(--amp-y)))
+      scale(1.16) rotate(300deg);
+  }
+  100% {
+    transform: translate(calc(-0.45 * var(--amp-x)), calc(0.75 * var(--amp-y)))
+      scale(1.12) rotate(360deg);
+  }
+}
+@keyframes driftD {
+  0% {
+    transform: translate(calc(0.4 * var(--amp-x)), calc(0.65 * var(--amp-y)))
+      scale(0.9) rotate(0);
+  }
+  24% {
+    transform: translate(calc(-0.95 * var(--amp-x)), calc(0 * var(--amp-y)))
+      scale(1.08) rotate(70deg);
+  }
+  48% {
+    transform: translate(calc(0.05 * var(--amp-x)), calc(-1.1 * var(--amp-y)))
+      scale(0.98) rotate(145deg);
+  }
+  70% {
+    transform: translate(calc(1.05 * var(--amp-x)), calc(-0.12 * var(--amp-y)))
+      scale(1.1) rotate(220deg);
+  }
+  90% {
+    transform: translate(calc(-0.25 * var(--amp-x)), calc(0.95 * var(--amp-y)))
+      scale(0.92) rotate(305deg);
+  }
+  100% {
+    transform: translate(calc(0.4 * var(--amp-x)), calc(0.65 * var(--amp-y)))
+      scale(0.9) rotate(360deg);
+  }
+}
+@keyframes driftE {
+  0% {
+    transform: translate(calc(-0.5 * var(--amp-x)), calc(0.1 * var(--amp-y)))
+      scale(1.05) rotate(0);
+  }
+  25% {
+    transform: translate(calc(0.3 * var(--amp-x)), calc(-0.8 * var(--amp-y)))
+      scale(0.92) rotate(95deg);
+  }
+  55% {
+    transform: translate(calc(0.95 * var(--amp-x)), calc(0.35 * var(--amp-y)))
+      scale(1.12) rotate(190deg);
+  }
+  78% {
+    transform: translate(calc(-0.3 * var(--amp-x)), calc(0.85 * var(--amp-y)))
+      scale(0.96) rotate(275deg);
+  }
+  100% {
+    transform: translate(calc(-0.5 * var(--amp-x)), calc(0.1 * var(--amp-y)))
+      scale(1.05) rotate(360deg);
+  }
+}
+@keyframes driftF {
+  0% {
+    transform: translate(calc(0.55 * var(--amp-x)), calc(-0.15 * var(--amp-y)))
+      scale(0.96) rotate(0);
+  }
+  28% {
+    transform: translate(calc(-0.65 * var(--amp-x)), calc(0.6 * var(--amp-y)))
+      scale(1.1) rotate(110deg);
+  }
+  56% {
+    transform: translate(calc(0.1 * var(--amp-x)), calc(-0.95 * var(--amp-y)))
+      scale(0.94) rotate(205deg);
+  }
+  84% {
+    transform: translate(calc(1 * var(--amp-x)), calc(0.05 * var(--amp-y)))
+      scale(1.12) rotate(300deg);
+  }
+  100% {
+    transform: translate(calc(0.55 * var(--amp-x)), calc(-0.15 * var(--amp-y)))
+      scale(0.96) rotate(360deg);
+  }
+}
+/* New paths for 7–8 */
+@keyframes driftG {
+  0% {
+    transform: translate(calc(-0.35 * var(--amp-x)), calc(-0.15 * var(--amp-y)))
+      scale(1.02) rotate(0deg);
+  }
+  25% {
+    transform: translate(calc(0.65 * var(--amp-x)), calc(0.75 * var(--amp-y)))
+      scale(0.94) rotate(90deg);
+  }
+  50% {
+    transform: translate(calc(-0.85 * var(--amp-x)), calc(0.25 * var(--amp-y)))
+      scale(1.08) rotate(180deg);
+  }
+  75% {
+    transform: translate(calc(0.25 * var(--amp-x)), calc(-0.95 * var(--amp-y)))
+      scale(0.96) rotate(270deg);
+  }
+  100% {
+    transform: translate(calc(-0.35 * var(--amp-x)), calc(-0.15 * var(--amp-y)))
+      scale(1.02) rotate(360deg);
+  }
+}
+@keyframes driftH {
+  0% {
+    transform: translate(calc(0.45 * var(--amp-x)), calc(0.35 * var(--amp-y)))
+      scale(0.92) rotate(0deg);
+  }
+  20% {
+    transform: translate(calc(-0.55 * var(--amp-x)), calc(0.85 * var(--amp-y)))
+      scale(1.06) rotate(72deg);
+  }
+  40% {
+    transform: translate(calc(0.95 * var(--amp-x)), calc(-0.15 * var(--amp-y)))
+      scale(1) rotate(144deg);
+  }
+  60% {
+    transform: translate(calc(-0.25 * var(--amp-x)), calc(-0.85 * var(--amp-y)))
+      scale(1.1) rotate(216deg);
+  }
+  80% {
+    transform: translate(calc(0.15 * var(--amp-x)), calc(0.95 * var(--amp-y)))
+      scale(0.94) rotate(288deg);
+  }
+  100% {
+    transform: translate(calc(0.45 * var(--amp-x)), calc(0.35 * var(--amp-y)))
+      scale(0.92) rotate(360deg);
+  }
+}
+
+/* Breathing = blur swell */
+@keyframes breathe {
+  0%,
+  100% {
+    filter: blur(var(--blur-min));
+  }
+  50% {
+    filter: blur(var(--blur-max));
+  }
+}
+
+/* Optional subtle flow overlay to add depth (no white) */
+.animatedGradientBackground::after {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  pointer-events: none;
+  background: conic-gradient(
+      from 0deg at 50% 50%,
+      #0000,
+      #00000008 10%,
+      #0000 35%,
+      #00000006 60%,
+      #0000 85%
+    ),
+    radial-gradient(120% 100% at 50% 50%, #0000 60%, #00000008 100%);
+  mix-blend-mode: soft-light;
+  animation: slow-spin 120s linear infinite;
+}
+@keyframes slow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile & reduced motion */
+@media (max-width: 768px) {
+  .animatedGradientBackground {
+    --amp-x: 44vw;
+    --amp-y: 30vh;
+    --blur-min: 30px;
+    --blur-max: 68px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blob {
+    animation: none;
+    filter: blur(40px);
+  }
+  .animatedGradientBackground::after {
+    display: none;
   }
 }

@@ -6,7 +6,19 @@ interface BackgroundProps {
 }
 
 function Background({ children }: BackgroundProps) {
-  return <div className={styles.animatedGradientBackground}>{children}</div>;
+  return (
+    <div className={styles.animatedGradientBackground}>
+      <span className={styles.blob} />
+      <span className={styles.blob} />
+      <span className={styles.blob} />
+      <span className={styles.blob} />
+      <span className={styles.blob} />
+      <span className={styles.blob} />
+      <span className={styles.blob} />
+      <span className={styles.blob} />
+      <div className={styles.content}>{children}</div>
+    </div>
+  );
 }
 
 export default Background;

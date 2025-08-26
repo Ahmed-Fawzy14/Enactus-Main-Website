@@ -1,0 +1,11 @@
+/* Transparent navbar with raised stacking so underlying content doesn't block clicks */
+.transparentNavBar {
+  background: transparent !important; /* ensure no bootstrap bg color */
+  position: relative; /* create stacking context */
+  z-index: 50; /* above main hero content */
+  box-shadow: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
